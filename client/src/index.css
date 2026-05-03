@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* ── Design tokens ──────────────────────────────────────── */
+:root {
+  --color-correct:  #538d4e; /* Green  — correct position  */
+  --color-present:  #b59f3b; /* Yellow — wrong position    */
+  --color-absent:   #3a3a3c; /* Gray   — not in word       */
+  --color-empty:    #121213; /* Unfilled tile background   */
+  --color-border:   #3a3a3c;
+}
+
+body {
+  background-color: #121213;
+  color: #ffffff;
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}

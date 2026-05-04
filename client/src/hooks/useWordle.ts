@@ -39,6 +39,7 @@ export interface UseWordleReturn {
   letterMap:    LetterMap;
   handleKey:    (key: string) => void;
   resetGame:    () => void;
+  shakingRow:   number | null;
 }
 
 // ── Hook ──────────────────────────────────────────────────────────────────────
@@ -50,6 +51,7 @@ export function useWordle(): UseWordleReturn {
   const [message,      setMessage]      = useState<string>("");
   const [isLoading,    setIsLoading]    = useState<boolean>(false);
   const [letterMap,    setLetterMap]    = useState<LetterMap>({});
+  const [shakingRow,   setShakingRow]   = useState<number | null>(null);
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -118,6 +120,12 @@ export function useWordle(): UseWordleReturn {
           ? err.response.data.error
           : "Server error — try again.";
       showMessage(errorMsg);
+
+      if (axios.isAxiosError(err) && err.response?.status === 422) {
+        const currentRow = guessHistory.length;
+        setShakingRow(currentRow);
+        setTimeout(() => setShakingRow(null), 600);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -164,6 +172,7 @@ export function useWordle(): UseWordleReturn {
     setGameStatus("playing");
     setMessage("");
     setLetterMap({});
+    setShakingRow(null);
   }
 
   return {
@@ -175,6 +184,7 @@ export function useWordle(): UseWordleReturn {
     letterMap,
     handleKey,
     resetGame,
+    shakingRow,
   };
 }
 

@@ -136,13 +136,13 @@ export default function App(): React.JSX.Element {
     letterMap,
     handleKey,
     resetGame,
+    shakingRow,
   } = useWordle();
 
   const { stats, showModal, closeModal } = useStats(gameStatus, guessHistory);
   const [statsOpen, setStatsOpen] = useState<boolean>(false);
 
   const winRow = gameStatus === "won" ? guessHistory.length - 1 : null;
-  const shakingRow: number | null = null;
 
   return (
     <div className="min-h-screen flex flex-col items-center pt-8 px-4">

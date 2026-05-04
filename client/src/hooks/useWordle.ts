@@ -9,7 +9,7 @@ const api = axios.create({
 });
 
 // ── Constants ─────────────────────────────────────────────────────────────────
-export const MAX_GUESSES = 5;
+export const MAX_GUESSES = 6;
 export const WORD_LENGTH = 5;
 
 // ── Types ─────────────────────────────────────────────────────────────────────

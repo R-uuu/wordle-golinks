@@ -23,7 +23,7 @@ const TILE_COLORS = {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function Tile({ letter = "", status = "empty" }) {
+function Tile({ letter = "", status = "empty" }: { letter?: string; status?: keyof typeof TILE_COLORS }) {
   return (
     <div
       className={`
@@ -38,7 +38,7 @@ function Tile({ letter = "", status = "empty" }) {
   );
 }
 
-function GuessRow({ letters, results }) {
+function GuessRow({ letters, results }: { letters?: string[]; results?: any[] }) {
   return (
     <div className="flex gap-1.5">
       {Array(WORD_LENGTH)
@@ -58,14 +58,14 @@ function GuessRow({ letters, results }) {
 
 export default function App() {
   const [currentGuess, setCurrentGuess] = useState("");
-  const [guessHistory, setGuessHistory] = useState([]); // [{ guess, results }]
-  const [gameStatus, setGameStatus] = useState("playing"); // "playing" | "won" | "lost"
+  const [guessHistory, setGuessHistory] = useState<{ guess: string; results: any[] }[]>([]); // [{ guess, results }]
+  const [gameStatus, setGameStatus] = useState<"playing" | "won" | "lost">("playing"); // "playing" | "won" | "lost"
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // Keyboard input — physical keyboard
   useEffect(() => {
-    function handleKeyDown(e) {
+    function handleKeyDown(e: KeyboardEvent) {
       if (gameStatus !== "playing") return;
       if (e.key === "Enter") return submitGuess();
       if (e.key === "Backspace") return setCurrentGuess((g) => g.slice(0, -1));
@@ -77,7 +77,7 @@ export default function App() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentGuess, gameStatus]);
 
-  function showMessage(text, duration = 2500) {
+  function showMessage(text: string, duration = 2500) {
     setMessage(text);
     setTimeout(() => setMessage(""), duration);
   }
@@ -108,7 +108,7 @@ export default function App() {
       }
     } catch (err) {
       const errorMsg =
-        err.response?.data?.error ?? "Something went wrong. Try again.";
+        (err as any).response?.data?.error ?? "Something went wrong. Try again.";
       showMessage(errorMsg);
     } finally {
       setIsLoading(false);

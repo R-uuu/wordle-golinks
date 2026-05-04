@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { useWordle, MAX_GUESSES, WORD_LENGTH } from "./hooks/useWordle";
 import type { LetterResult }                   from "./hooks/useWordle";
+import { useStats }                            from "./hooks/useStats";
 import Keyboard                                from "./components/Keyboard";
+import StatsModal                              from "./components/StatsModal";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -122,6 +125,8 @@ function Toast({ message }: ToastProps): React.JSX.Element | null {
 // ── App ───────────────────────────────────────────────────────────────────────
 
 export default function App(): React.JSX.Element {
+  const [statsOpen, setStatsOpen] = useState<boolean>(false);
+
   const {
     currentGuess,
     guessHistory,
@@ -132,6 +137,8 @@ export default function App(): React.JSX.Element {
     resetGame,
   } = useWordle();
 
+  const { stats, showModal, closeModal } = useStats(gameStatus, guessHistory);
+
   return (
     <div className="min-h-screen flex flex-col items-center pt-8 px-4">
 
@@ -140,9 +147,19 @@ export default function App(): React.JSX.Element {
         className="w-full max-w-sm mb-8 text-center
                    border-b border-[var(--color-border)] pb-4"
       >
-        <h1 className="text-3xl font-bold tracking-widest uppercase">
-          Wordl<span className="text-[var(--color-correct)]">e</span>
-        </h1>
+        <div className="flex items-center justify-between">
+          <div />
+          <h1 className="text-3xl font-bold tracking-widest uppercase">
+            Wordl<span className="text-[var(--color-correct)]">e</span>
+          </h1>
+          <button
+            onClick={() => setStatsOpen(true)}
+            aria-label="View statistics"
+            className="text-gray-400 hover:text-white transition-colors text-xl"
+          >
+            Stats
+          </button>
+        </div>
         <p className="text-xs text-gray-500 mt-1 tracking-widest uppercase">
           Definitely Not Wordle
         </p>
@@ -160,7 +177,11 @@ export default function App(): React.JSX.Element {
       {/* ── Play again ── */}
       {gameStatus !== "playing" && (
         <button
-          onClick={resetGame}
+          onClick={() => {
+            closeModal();
+            setStatsOpen(false);
+            resetGame();
+          }}
           className="mt-8 px-8 py-2.5 bg-[var(--color-correct)]
                      hover:brightness-110 text-white font-bold rounded-lg
                      tracking-widest uppercase text-sm transition-all"
@@ -168,6 +189,20 @@ export default function App(): React.JSX.Element {
           Play Again
         </button>
       )}
+
+      <StatsModal
+        stats={stats}
+        isOpen={showModal || statsOpen}
+        onClose={() => {
+          closeModal();
+          setStatsOpen(false);
+        }}
+        onPlayAgain={() => {
+          closeModal();
+          setStatsOpen(false);
+          resetGame();
+        }}
+      />
     </div>
   );
 }

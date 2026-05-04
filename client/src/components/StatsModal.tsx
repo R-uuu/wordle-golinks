@@ -1,10 +1,14 @@
 import type { GameStats } from "../utils/statsStorage";
+import ShareButton from "./ShareButton";
+import type { GuessEntry } from "../hooks/useWordle";
 
 interface StatsModalProps {
   stats: GameStats;
   isOpen: boolean;
   onClose: () => void;
   onPlayAgain: () => void;
+  guessHistory: GuessEntry[];
+  didWin: boolean;
 }
 
 interface StatBoxProps {
@@ -57,6 +61,8 @@ export default function StatsModal({
   isOpen,
   onClose,
   onPlayAgain,
+  guessHistory,
+  didWin,
 }: StatsModalProps): React.JSX.Element | null {
   if (!isOpen) return null;
 
@@ -111,26 +117,32 @@ export default function StatsModal({
             <GuessDistribution distribution={stats.guessDistribution} />
           </div>
 
-          <div className="flex gap-3 pt-2">
-            <button
-              onClick={onClose}
-              className="flex-1 py-3 rounded-lg border border-[var(--color-border)]
-                         text-white text-sm font-bold tracking-widest uppercase
-                         hover:bg-[var(--color-border)] transition-colors"
-            >
-              Close
-            </button>
-            <button
-              onClick={() => {
-                onClose();
-                onPlayAgain();
-              }}
-              className="flex-1 py-3 rounded-lg bg-[var(--color-correct)]
-                         text-white text-sm font-bold tracking-widest uppercase
-                         hover:brightness-110 transition-all"
-            >
-              Play Again
-            </button>
+          <div className="flex flex-col gap-3 pt-2">
+            <div className="flex justify-center">
+              <ShareButton guessHistory={guessHistory} didWin={didWin} />
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={onClose}
+                className="flex-1 py-3 rounded-lg border border-[var(--color-border)]
+                           text-white text-sm font-bold tracking-widest uppercase
+                           hover:bg-[var(--color-border)] transition-colors"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  onClose();
+                  onPlayAgain();
+                }}
+                className="flex-1 py-3 rounded-lg bg-[var(--color-correct)]
+                           text-white text-sm font-bold tracking-widest uppercase
+                           hover:brightness-110 transition-all"
+              >
+                Play Again
+              </button>
+            </div>
           </div>
         </div>
       </div>

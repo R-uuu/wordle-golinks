@@ -225,6 +225,8 @@ export default function App(): React.JSX.Element {
           setStatsOpen(false);
           resetGame();
         }}
+        guessHistory={guessHistory}
+        didWin={gameStatus === "won"}
       />
     </div>
   );

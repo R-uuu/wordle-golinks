@@ -1,12 +1,15 @@
 @import "tailwindcss";
 
-/* ── Design tokens ──────────────────────────────────────── */
+/* ── Design tokens ─────────────────────────────────────────────────────────── */
 :root {
-  --color-correct:  #538d4e; /* Green  — correct position  */
-  --color-present:  #b59f3b; /* Yellow — wrong position    */
-  --color-absent:   #3a3a3c; /* Gray   — not in word       */
-  --color-empty:    #121213; /* Unfilled tile background   */
-  --color-border:   #3a3a3c;
+  --color-correct: #538d4e;
+  --color-present: #b59f3b;
+  --color-absent:  #3a3a3c;
+  --color-empty:   #121213;
+  --color-border:  #3a3a3c;
+
+  --flip-duration: 0.5s;
+  --flip-delay-step: 0.15s;
 }
 
 body {
@@ -15,3 +18,57 @@ body {
   font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+/* ── Tile flip keyframes ───────────────────────────────────────────────────── */
+@keyframes tile-flip {
+  0% { transform: rotateX(0deg); }
+  45% { transform: rotateX(-90deg); }
+  55% { transform: rotateX(-90deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+/* ── Pop keyframe ───────────────────────────────────────────────────────────── */
+@keyframes tile-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* ── Shake keyframe ─────────────────────────────────────────────────────────── */
+@keyframes tile-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+/* ── Bounce keyframe ────────────────────────────────────────────────────────── */
+@keyframes tile-bounce {
+  0%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-20px); }
+  60% { transform: translateY(-10px); }
+}
+
+/* ── Animation utility classes ─────────────────────────────────────────────── */
+.tile-flip {
+  animation: tile-flip var(--flip-duration) ease-in-out forwards;
+}
+
+.tile-pop {
+  animation: tile-pop 0.1s ease-in-out;
+}
+
+.tile-shake {
+  animation: tile-shake 0.4s ease-in-out;
+}
+
+.tile-bounce {
+  animation: tile-bounce 0.6s ease-in-out forwards;
+}
+
+.tile-delay-0 { animation-delay: calc(var(--flip-delay-step) * 0); }
+.tile-delay-1 { animation-delay: calc(var(--flip-delay-step) * 1); }
+.tile-delay-2 { animation-delay: calc(var(--flip-delay-step) * 2); }
+.tile-delay-3 { animation-delay: calc(var(--flip-delay-step) * 3); }
+.tile-delay-4 { animation-delay: calc(var(--flip-delay-step) * 4); }

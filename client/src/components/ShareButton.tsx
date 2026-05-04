@@ -33,6 +33,12 @@ export default function ShareButton({
     if (result === "shared") {
       setButtonLabel("Shared");
       setTimeout(() => setButtonLabel("Share go/wordle"), 3000);
+      return;
+    }
+
+    if (result === "error") {
+      setButtonLabel("Share failed");
+      setTimeout(() => setButtonLabel("Share go/wordle"), 3000);
     }
   }
 

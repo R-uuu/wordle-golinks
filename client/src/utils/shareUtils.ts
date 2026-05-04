@@ -36,12 +36,31 @@ export function buildShareText(
 export async function shareResult(
   text: string
 ): Promise<"shared" | "copied" | "error"> {
+  const navWithUAData = navigator as Navigator & {
+    userAgentData?: { mobile?: boolean };
+  };
+
+  const isMobile =
+    Boolean(navWithUAData.userAgentData?.mobile) ||
+    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+  // Desktop/Windows: use clipboard first so users are never blocked by the OS share sheet.
+  if (!isMobile) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return "copied";
+    } catch {
+      return "error";
+    }
+  }
+
+  // Mobile: prefer native share sheet, then fall back to clipboard.
   if (navigator.share) {
     try {
       await navigator.share({ text });
       return "shared";
     } catch {
-      return "error";
+      // User may cancel share; fall through to clipboard fallback.
     }
   }
 
